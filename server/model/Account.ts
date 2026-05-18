@@ -1,5 +1,5 @@
 import mongoose, { Decimal128, Schema } from "mongoose";
-import { AccountType } from "../utilities/AccountType";
+import { AccountType } from "./enums/AccountType";
 
 export interface Account{
 
