@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose"
-import { TransactionType } from "../utilities/TransactionType"
-import { TransactionStatus } from "../utilities/TransactionStatus"
+import { TransactionType } from "./enums/TransactionType"
+import { TransactionStatus } from "./enums/TransactionStatus"
 
 export interface Transaction{
 

@@ -4,20 +4,44 @@ import apple from '../assets/apple.png'
 import informaiton from '../assets/informaiton.png'
 import monitor from '../assets/monitor.png'
 import notes from '../assets/notes.png'
+import ToggleMenu from './toggle/ToggleMenu'
+import { useState } from 'react'
 
 function NavigationBar() {
 
+    const[isToggelMenuOpen,setIsToggleOpen] = useState(false);
+
     return(
+
         <>
+        { /* Mobile version for navigation bar */ }
         <nav>
 
-            <nav id="top-navigation-bar" className='md:hidden flex items-center justify-between shadow-xl rounded-md bg-white' >
+            <nav id='top-navigation-bar' className='md:hidden flex items-center justify-between shadow-xl rounded-md bg-white' >
 
-            <img src={logo} className='w-40' alt='Fibank Logo'></img>
+                <img src={logo} className='w-40' alt='Fibank Logo'></img>
+
+                <ToggleMenu
+
+                    isToggleClicked={isToggelMenuOpen}
+                    setIsToggleClicked={setIsToggleOpen}
+                />
+
+
+            </nav>
+
+            {/* The linking routes  */}
+            <article className='md:hidden flex flex-col item-center shadow-xl rounded-md bg-white'>
+
+               
+
+            </article>
+
 
         </nav>
 
-        <nav id="top-navigation-bar" className='max-md:hidden flex items-center justify-between shadow-xl rounded-md bg-white' >
+        { /* Desktop version for navigation bar */ }
+        <nav id='top-navigation-bar' className='max-md:hidden flex items-center justify-between shadow-xl rounded-md bg-white w-full' >
 
             <img src={logo} className='w-50' alt='Fibank Logo'></img>
 
@@ -55,7 +79,6 @@ function NavigationBar() {
 
         </nav>
 
-        </nav>
         </>
     )
 
