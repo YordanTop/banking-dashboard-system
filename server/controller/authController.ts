@@ -6,7 +6,7 @@ import { AuthService } from '../service/authService';
 
 import { jwtConfiguration } from '../config/config';
 import { UserCredentials } from '../model/UserCredentials';
-import { UserCredentialsRequest } from '../dto/request/userCredentialRequest';
+import { UserCredentialsRequest } from '../dto/request/userCredentialsRequest';
 
 
 const authService = new AuthService();
