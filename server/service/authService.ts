@@ -1,5 +1,5 @@
 import {CreateUserRequest} from "../dto/request/createUserRequest"
-import { UserCredentialsRequest } from "../dto/request/userCredentialRequest"
+import { UserCredentialsRequest } from "../dto/request/userCredentialsRequest"
 import { UserCredentials } from "../model/UserCredentials";
 
 import { createAuthToken } from "../utilities/authToken"
@@ -21,7 +21,7 @@ export class AuthService{
 
     public async userCreateLoginToken(userCredentialsRequest:UserCredentialsRequest){
 
-        const userSelected = await this.userRepository.getUserByUsername(userCredentialsRequest.username);
+        const userSelected = await this.userRepository.getUserCredentialsByUsername(userCredentialsRequest.username);
 
         if(userSelected == undefined)
             throw new Error("This user does not exists!");
