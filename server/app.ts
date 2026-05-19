@@ -13,7 +13,6 @@ app.use(express.json());
 
 const databaseURL = `${databaseConfiguration.uri}:${databaseConfiguration.port}/${databaseConfiguration.database}`;
 
-console.log(databaseURL)
 
 try {
   await mongoose.connect(databaseURL);

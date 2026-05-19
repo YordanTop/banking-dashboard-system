@@ -1,6 +1,8 @@
 import mongoose, { Schema } from "mongoose";
 import { UserRole } from "./enums/UserRole";
 
+import * as bcrypt from "bcrypt";
+
 export interface UserCredentials{
     
       username: string,
@@ -18,8 +20,18 @@ const userCredentialsSchema = new mongoose.Schema<UserCredentials>({
             enum: UserRole,
             required: true
           },
+}) ;
 
-    }) ;
+
+userCredentialsSchema.pre("save", async function() {
+      if(!this.isModified('password'))
+      {
+            return;
+      }
+
+      const salt = await bcrypt.genSalt(10);
+      this.password = await bcrypt.hash(this.password, salt);
+})
 
 export const userCredentialsModel = mongoose.model("UserCredentials", userCredentialsSchema);
 

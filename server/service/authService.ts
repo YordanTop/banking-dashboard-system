@@ -7,6 +7,8 @@ import { createAuthToken } from "../utilities/authToken"
 import { UserRepository } from "../repository/userRepository";
 import { UserRole } from "../model/enums/UserRole";
 
+import * as bcrypt from 'bcrypt';
+
 export class AuthService{
 
     private userRepository: UserRepository;
@@ -23,12 +25,17 @@ export class AuthService{
 
         const userSelected = await this.userRepository.getUserCredentialsByUsername(userCredentialsRequest.username);
 
-        if(userSelected == undefined)
+        if(userSelected?.username == null)
             throw new Error("This user does not exists!");
 
+        const matchPasswords = await bcrypt.compare(userCredentialsRequest.password, userSelected.password);
+
+        if(matchPasswords == false)
+            throw new Error("This password is incorrect!");
+
+
         const validatioTokenProperies = {
-                id: userSelected,
-                username: userSelected,
+                username: userSelected?.username,
                 role: UserRole.USER
         }
 

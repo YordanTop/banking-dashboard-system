@@ -24,14 +24,14 @@ export const login = async (req:Request, res:Response) => {
             }); 
         }
 
-        if(userCredentials.username == undefined){
+        if(userCredentials.username == null){
             return res.status(404).send({
                 status: 404,
                 error: "The user is not entered!"
             });
         }
 
-        if(userCredentials.password == undefined){
+        if(userCredentials.password == null){
             return res.status(404).send({
                 status: 404,
                 error: "The password is not entered!"
