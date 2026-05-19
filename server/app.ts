@@ -1,7 +1,7 @@
 import express  from "express";
 import mongoose from "mongoose";
 
-import userRouter from "./router/userRouter";
+//import userRouter from "./router/userRouter";
 import authRouter from "./router/authRouter";
 
 import { serversConfiguration } from "./config/config";

@@ -1,5 +1,5 @@
 import {CreateUserRequest} from "../dto/request/createUserRequest"
-import { UserCredentialsRequest } from "../dto/request/userCredentialRequest"
+import { UserCredentialsRequest } from "../dto/request/userCredentialsRequest"
 import { UserCredentials } from "../model/UserCredentials";
 
 import { createAuthToken } from "../utilities/authToken"
