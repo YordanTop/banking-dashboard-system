@@ -21,16 +21,18 @@ export class AuthService{
 
     public async userCreateLoginToken(userCredentialsRequest:UserCredentialsRequest){
 
-        const userSelected = await this.userRepository.getUserByUsername(userCredentialsRequest.username);
+        const userCredentials = await this.userRepository.getUserCredentialsByUsername(userCredentialsRequest.username);
 
-        if(userSelected == undefined)
+        if(userCredentials?.username == undefined)
             throw new Error("This user does not exists!");
 
+
         const validatioTokenProperies = {
-                id: userSelected,
-                username: userSelected,
-                role: UserRole.USER
+                username: userCredentials.username,
+                role: userCredentials.role,
         }
+
+        console.log(validatioTokenProperies)
 
         return createAuthToken(validatioTokenProperies)
 
