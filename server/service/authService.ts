@@ -7,7 +7,6 @@ import { createAuthToken } from "../utilities/authToken"
 import { UserRepository } from "../repository/userRepository";
 import { UserRole } from "../model/enums/UserRole";
 
-import * as bcrypt from 'bcrypt';
 import { User } from "../model/User";
 import mongoose from "mongoose";
 
