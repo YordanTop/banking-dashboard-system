@@ -1,8 +1,9 @@
+import { UserRole } from "../../model/enums/UserRole"
 
 export interface CreateUserRequest{ 
 
     egn: string
-    uid: string
+    uic?: string
     fullnameCyrillic: string,
     fullnameLatin: string,
     email: string,
@@ -11,5 +12,5 @@ export interface CreateUserRequest{
 
     username: string,
     password: string
-
+    
 }

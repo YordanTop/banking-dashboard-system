@@ -1,16 +1,16 @@
-import mongoose, { Decimal128, Schema } from "mongoose";
+import mongoose, { Decimal128, Schema, Types } from "mongoose";
 import { AccountType } from "./enums/AccountType";
 
 export interface Account{
 
     account_type: AccountType,
 
-    user_owner_id: Schema.Types.ObjectId,
-    transaction_id: Schema.Types.ObjectId,
+    user_owner_id: Types.ObjectId,
+    transaction_id: Types.ObjectId,
 
     name: string,
 
-    amount: Schema.Types.Decimal128,
+    amount: Types.Decimal128,
     currency: string
     
 };

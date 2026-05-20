@@ -7,6 +7,9 @@ import { createAuthToken } from "../utilities/authToken"
 import { UserRepository } from "../repository/userRepository";
 import { UserRole } from "../model/enums/UserRole";
 
+import { User } from "../model/User";
+import mongoose from "mongoose";
+
 export class AuthService{
 
     private userRepository: UserRepository;
@@ -15,7 +18,54 @@ export class AuthService{
         this.userRepository = new UserRepository();
     }
 
-    public async userRegister(user:CreateUserRequest){
+    public async userRegister(userRequest:CreateUserRequest){
+
+        const userFromDatabase = await this.userRepository.getUserCredentialsByUsername(userRequest.username);
+
+        if(userFromDatabase != null)
+            throw new Error("This user already exists!");
+
+        try{
+
+            const transactionSession = await mongoose.startSession();
+
+            await transactionSession.withTransaction(async () =>{
+                
+                const userCredentialsId = new mongoose.Types.ObjectId();
+
+                const userMapping: User = {
+
+                    egn: userRequest.egn,
+                    uic: userRequest.uic,
+                    fullnameCyrillic: userRequest.fullnameCyrillic,
+                    fullnameLatin: userRequest.fullnameLatin,
+                    email: userRequest.email,
+                    phoneNumber: userRequest.phoneNumber,
+                    address: userRequest.address,
+                    credentialID: userCredentialsId, 
+
+                }
+
+                const userCredentialsMapping: UserCredentials = {
+
+                    _id: userCredentialsId,
+                    username: userRequest.username,
+                    password: userRequest.password,
+                    role: UserRole.USER
+
+                }
+                
+                await this.userRepository.createUser(userMapping, transactionSession);
+                await this.userRepository.createUserCredentials(userCredentialsMapping, transactionSession);
+
+            });
+            
+            await transactionSession.endSession();
+            
+        }catch(error){
+
+            throw new Error("Creating user transaction was terminated!" + error)
+        }
 
     }
 
@@ -33,10 +83,6 @@ export class AuthService{
         }
 
         return createAuthToken(validatioTokenProperies)
-
-    }
-
-    public async userLogout(){
 
     }
 

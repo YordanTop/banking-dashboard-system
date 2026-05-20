@@ -5,11 +5,13 @@ import { CreateUserRequest } from '../dto/request/createUserRequest';
 import { AuthService } from '../service/authService';
 
 import { jwtConfiguration } from '../config/config';
-import { UserCredentials } from '../model/UserCredentials';
+
 import { UserCredentialsRequest } from '../dto/request/userCredentialsRequest';
 
 
 const authService = new AuthService();
+
+const authCookieName = "auth-cookie";
 
 /** Login user to the system */
 export const login = async (req:Request, res:Response) => {
@@ -20,21 +22,21 @@ export const login = async (req:Request, res:Response) => {
         if(userCredentials == undefined){
            return res.status(404).send({
                 status: 404,
-                error: "The fields: username; password are not defiend!"
+                message: "The fields: username; password are not defiend!"
             }); 
         }
 
         if(userCredentials.username == undefined){
             return res.status(404).send({
                 status: 404,
-                error: "The user is not entered!"
+                message: "The user is not entered!"
             });
         }
 
         if(userCredentials.password == undefined){
             return res.status(404).send({
                 status: 404,
-                error: "The password is not entered!"
+                message: "The password is not entered!"
             });
         }
     
@@ -42,7 +44,7 @@ export const login = async (req:Request, res:Response) => {
         const token = await authService.userCreateLoginToken(userCredentials);
 
         res.cookie(
-            "auth-cookie",token,{
+            authCookieName,token,{
                 httpOnly:true,
                 secure:true,
                 sameSite:"strict",
@@ -53,13 +55,13 @@ export const login = async (req:Request, res:Response) => {
 
         return res.status(200).send({
                 status: 200,
-                error: "The login was successful"
+                message: "The login was successful"
             });
     }
     catch(error){
         return res.status(404).send({
                 status: 404,
-                error: `${error}`
+                message: `${error}`
             });
     }
     
@@ -67,25 +69,45 @@ export const login = async (req:Request, res:Response) => {
 
 /** Logout user to the system */
 export const logout = (req:Request, res:Response, next:NextFunction) => {
-    
+
+    try{
+        res.clearCookie(authCookieName);
+
+            return res.status(200).send({
+                status: 200,
+                message: "The logout was successful"
+            });
+    }
+    catch(error){
+        return res.status(404).send({
+                status: 404,
+                message: `${error}`
+            });
+    }
+
 }
 
 /** Register user to the system */
 export const register = (req:Request, res:Response, next:NextFunction) => {
 
-        const rawData = req.body as CreateUserRequest;
+    const rawData = req.body as CreateUserRequest;
 
-        authService.userRegister(rawData);    
+
+    try{
+        authService.userRegister(rawData);   
+
+        return res.status(200).send({
+                status: 200,
+                message: "The user was successful created!"
+            });
+    }
+    catch(error){
+        return res.status(404).send({
+                status: 404,
+                message: `${error}`
+            });
+    }
 
 }
 
-/** Change user passport */
-export const changePassword = (req:Request, res:Response, next:NextFunction) => {
-
-}
-
-/** Switching roles */
-export const changeAuthorizationAccess = (req:Request, res:Response, next:NextFunction) => {
-
-}
 
