@@ -1,4 +1,4 @@
-import mongoose, { Schema } from "mongoose"
+import mongoose, { Schema, Types } from "mongoose"
 import { TransactionType } from "./enums/TransactionType"
 import { TransactionStatus } from "./enums/TransactionStatus"
 
@@ -6,10 +6,10 @@ export interface Transaction{
 
     transaction_type: TransactionType
 
-    from_account: Schema.Types.ObjectId,
-    to_account: Schema.Types.ObjectId,
+    from_account: Types.ObjectId,
+    to_account: Types.ObjectId,
 
-    amount: Schema.Types.Decimal128,
+    amount: Types.Decimal128,
     currency: string,
 
     created_at: Date,
