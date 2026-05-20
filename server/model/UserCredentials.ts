@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import { UserRole } from "../model/enums/UserRole";
+import { UserRole } from "./enums/UserRole";
 
 export interface UserCredentials{
     

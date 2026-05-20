@@ -1,7 +1,7 @@
 import dotevn from 'dotenv'
 import { ExpressConfiguration } from './expressConfig';
 import { MongodbConfiguration } from './mongodbConfig';
-import { JwtConfiguration } from './jwtConfig';
+import { JwtConfiguration } from './jwtConfig.ts';
 
 /* Searches the env file from this project*/
 dotevn.config()
