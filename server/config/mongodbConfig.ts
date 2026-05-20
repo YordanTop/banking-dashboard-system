@@ -1,5 +1,5 @@
 /** 
- * EnvConfiguration is a frame for configuring expressjs!
+ * MongodbConfiguration is a frame for configuring mongodb!
  */
 export interface MongodbConfiguration{
 

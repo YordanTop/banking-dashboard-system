@@ -1,5 +1,5 @@
 /** 
- * EnvConfiguration is a frame for configuring expressjs!
+ * ExpressConfiguration is a frame for configuring expressjs!
  */
 export interface ExpressConfiguration{
 
