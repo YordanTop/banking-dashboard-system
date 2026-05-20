@@ -26,3 +26,13 @@ export const selectAllUser = (req:Request, res:Response, next:NextFunction) => {
 export const deleteUser = (req:Request, res:Response, next:NextFunction) => {
 
 }
+
+/** Change user passport */
+export const changePassword = (req:Request, res:Response, next:NextFunction) => {
+    
+}
+
+/** Switching roles */
+export const changeAuthorizationAccess = (req:Request, res:Response, next:NextFunction) => {
+
+}
