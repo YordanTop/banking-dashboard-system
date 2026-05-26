@@ -83,7 +83,8 @@ export class AuthService{
 
 
         const validatioTokenProperies = {
-                username: userSelected?.username,
+
+                username: userSelected.username,
                 role: UserRole.USER
         }
 
