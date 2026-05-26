@@ -98,7 +98,7 @@ export const register = (req:Request, res:Response, next:NextFunction) => {
 
         return res.status(200).send({
                 status: 200,
-                message: "The user was successful created!"
+                message: "The user was successfully created!"
             });
     }
     catch(error){

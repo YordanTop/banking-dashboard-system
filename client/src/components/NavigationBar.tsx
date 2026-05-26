@@ -6,6 +6,7 @@ import monitor from '../assets/monitor.png'
 import notes from '../assets/notes.png'
 import ToggleMenu from './toggle/ToggleMenu'
 import { useState } from 'react'
+import { Link } from 'react-router';
 
 function NavigationBar() {
 
@@ -17,9 +18,11 @@ function NavigationBar() {
         { /* Mobile version for navigation bar */ }
         <nav>
 
-            <nav id='top-navigation-bar' className='md:hidden flex items-center justify-between shadow-xl rounded-md bg-white' >
-
-                <img src={logo} className='w-40' alt='Fibank Logo'></img>
+            <nav id='top-navigation-bar' className='lg:hidden flex items-center justify-between shadow-xl rounded-md bg-white' >
+                
+                <Link to="/">
+                    <img src={logo} className='w-40' alt='Fibank Logo'></img>
+                </Link>
 
                 <ToggleMenu
 
@@ -41,10 +44,11 @@ function NavigationBar() {
         </nav>
 
         { /* Desktop version for navigation bar */ }
-        <nav id='top-navigation-bar' className='max-md:hidden flex items-center justify-between shadow-xl rounded-md bg-white w-full' >
+        <nav id='top-navigation-bar' className='max-lg:hidden flex items-center justify-between shadow-xl rounded-md bg-white w-full' >
 
-            <img src={logo} className='w-50' alt='Fibank Logo'></img>
-
+                <Link to="/">
+                    <img src={logo} className='w-40' alt='Fibank Logo'></img>
+                </Link>
 
             <div id="top-navigation-options" className='flex flex-wrap items-center justify-between gap-5'>
 

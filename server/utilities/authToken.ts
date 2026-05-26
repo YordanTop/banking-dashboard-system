@@ -1,6 +1,5 @@
 import jwt  from "jsonwebtoken"
 import {jwtConfiguration} from "../config/config"
-import { UserCredentials } from "../model/UserCredentials";
 
 
 /** createCookieAuthToken it create JWT token */
