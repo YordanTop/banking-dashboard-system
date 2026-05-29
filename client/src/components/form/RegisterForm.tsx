@@ -1,18 +1,34 @@
-import { useForm } from 'react-hook-form'
+import { useForm, type FieldValues, type SubmitHandler } from 'react-hook-form'
 import { FormField } from '../field/FormField';
 import QuestionIcon from '../../assets/icons/question-icon.svg'
-import { FormSuggestionPopup } from '../popup/FormSuggestionPopup';
+import { axiosInstance } from '../../config/AxiosConfig';
  
+interface RegisterFormInput extends FieldValues{
+    egn: string
+    uic?: string
+    fullnameCyrillic: string,
+    fullnameLatin: string,
+    email: string,
+    phoneNumber: string,
+    address: string,
 
+    username: string,
+    password: string
+}
 
 export function RegisterForm(){
 
-
-
-    const {register, handleSubmit, formState: {errors}} = useForm();
+    const {register, handleSubmit, formState: {errors}} = useForm<RegisterFormInput>();
 
     //Handing the form validation
-    const onSubmit = () => {}
+    const onSubmit: SubmitHandler<RegisterFormInput> = async (data: RegisterFormInput) => {
+
+        await axiosInstance.post("auth/register",data)
+                .then(() => alert("Registration was succesful!"))
+                .then(() => console.log(data))
+                .catch((err) => console.error(err));
+
+    }
 
     return (<>
 
@@ -33,8 +49,9 @@ export function RegisterForm(){
                 typeOfField="text"
                 register={register}
                 validation={{
-                    required:"Полето е задължително"
+                    required:"Полето е задължително!"
                 }}
+                error={errors}
             />
             <FormField
             
@@ -42,6 +59,7 @@ export function RegisterForm(){
                 labelText="ЛНЧ или паспорт:"
                 typeOfField="text"
                 register={register}
+                error={errors}
                 toggle={{
                     icon: QuestionIcon,
                     message: ""
@@ -50,24 +68,27 @@ export function RegisterForm(){
             />
             <FormField
             
-                fieldName="name-cyrillic"
+                fieldName="fullnameCyrillic"
                 labelText="* Име и фамилия на кирилица:"
                 typeOfField="text"
                 register={register}
+                
                 validation={{
-                    required:"Полето е задължително"
+                    required:"Полето е задължително!"
                 }}
+                error={errors}
 
             />
             <FormField
             
-                fieldName="name-latin"
+                fieldName="fullnameLatin"
                 labelText="*  Име и фамилия на латиница:"
                 typeOfField="text"
                 register={register}
                 validation={{
-                    required:"Полето е задължително"
+                    required:"Полето е задължително!"
                 }}
+                error={errors}
             />
             <FormField
             
@@ -76,18 +97,20 @@ export function RegisterForm(){
                 typeOfField="email"
                 register={register}
                 validation={{
-                    required:"Полето е задължително"
+                    required:"Полето е задължително!"
                 }}
+                error={errors}
             />
             <FormField
             
-                fieldName="phone-number"
+                fieldName="phoneNumber"
                 labelText="* Телефон:"
                 typeOfField="tel"
                 register={register}
                 validation={{
-                    required:"Полето е задължително"
+                    required:"Полето е задължително!"
                 }}
+                error={errors}
             />
             <FormField
             
@@ -96,8 +119,9 @@ export function RegisterForm(){
                 typeOfField="text"
                 register={register}
                 validation={{
-                    required:"Полето е задължително"
+                    required:"Полето е задължително!"
                 }}
+                error={errors}
             />
 
        
@@ -110,8 +134,9 @@ export function RegisterForm(){
                 typeOfField="text"
                 register={register}
                 validation={{
-                    required:"Полето е задължително"
+                    required:"Полето е задължително!"
                 }}
+                error={errors}
                 toggle={{
                     icon: QuestionIcon,
                     message: "Изисквания за потребителско име: \n - Да е с дължина от минимум 10 символа; \n - Да няма специални символи в името;\n - Да е на латиница."
@@ -120,13 +145,14 @@ export function RegisterForm(){
 
             <FormField
             
-                fieldName="passport"
+                fieldName="password"
                 labelText="* Парола:"
                 typeOfField="password"
                 register={register}
                 validation={{
-                    required:"Полето е задължително"
+                    required:"Полето е задължително!"
                 }}
+                error={errors}
                 toggle={{
                     icon: QuestionIcon,
                     message: "Изисквания за парола: \n - Да е с дължина от 6 до 24 знака; \n - Да съдържа поне една буква;\n - Да съдържа поне една цифра; \n - Да е на латиница."
@@ -140,8 +166,9 @@ export function RegisterForm(){
                 typeOfField="password"
                 register={register}
                 validation={{
-                    required:"Полето е задължително"
+                    required:"Полето е задължително!"
                 }}
+                error={errors}
             />
 
         <hr className='bg-red-500 w-full h-1 border border-none'/>
@@ -150,7 +177,7 @@ export function RegisterForm(){
         <p className='text-sm'>Необходимо е да запомните потребителското си име и парола, които току-що въведохте. След като потвърдите регистрацията в банката, те ще Ви служат за вход във Виртуален банков клон (e-fibank).</p>
         
 
-        <button type="submit" className="bg-red-700 hover:bg-red-500 text-white font-bold py-2 px-4 rounded w-full hover:hand">Регистриране</button>
+        <button type="submit" className="bg-red-700 hover:bg-red-500 text-white font-bold py-2 px-4 rounded w-full hover:hand cursor-pointer">Регистриране</button>
    
     </form>
     

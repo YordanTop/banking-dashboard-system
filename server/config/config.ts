@@ -7,9 +7,9 @@ import { JwtConfiguration } from './jwtConfig.ts';
 dotevn.config()
 
 /** Configurating the env parameters */
-export const serversConfiguration: ExpressConfiguration = {
+export const serverConfiguration: ExpressConfiguration = {
 
-    url: process.env.EXPRESS_HOST_URL || "none",
+    host: process.env.EXPRESS_HOST_URL || "none",
     port: Number(process.env.EXPRESS_HOST_PORT) || 0
 
 };
@@ -21,6 +21,8 @@ export const databaseConfiguration: MongodbConfiguration = {
 }
 
 export const jwtConfiguration: JwtConfiguration = {
-    secret: process.env.JSON_SECRET_KEY || "none",
-    expiration: Number(process.env.JSON_DEFAULT_EXPIRATION_DATE) || 0
+    secret: process.env.JWT_AUTH_SECRET_KEY || "none",
+    expiration: Number(process.env.JWT_AUTH_DEFAULT_EXPIRATION_DATE) || 360000
 }
+
+export const clientUrlCofiguration = process.env.CLIENT_URL || "none"

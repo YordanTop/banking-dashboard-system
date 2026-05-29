@@ -1,4 +1,4 @@
-import type { RegisterOptions, UseFormRegister,FieldValues, ErrorOption } from "react-hook-form";
+import type { RegisterOptions, UseFormRegister,FieldValues, ErrorOption, FieldErrors } from "react-hook-form";
 import type { ToggleToolTip } from "../toggle/ToggleToolTipField";
 
 export interface Field{
@@ -9,6 +9,7 @@ export interface Field{
     icon?: string;
     register?: UseFormRegister<FieldValues>
     validation?: RegisterOptions
-    
+    error?: FieldErrors<FieldValues>
+
     toggle?: ToggleToolTip;
 }

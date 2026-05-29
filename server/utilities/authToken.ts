@@ -5,6 +5,7 @@ import {jwtConfiguration} from "../config/config"
 /** createCookieAuthToken it create JWT token */
 export const createAuthToken = (validatioTokenProperies: object): string =>{
 
+    
     const token = jwt.sign(validatioTokenProperies, jwtConfiguration.secret, {
 
         expiresIn: jwtConfiguration.expiration,
@@ -15,15 +16,14 @@ export const createAuthToken = (validatioTokenProperies: object): string =>{
 }
 
 
-const verifyAuthToken = (token:string) =>{
+export const decodedAuthToken = (token:string): object =>{
 
-    jwt.verify(token, jwtConfiguration.secret, function(err, decode){
+    const decodedToken = jwt.verify(token, jwtConfiguration.secret);
 
-        if(err){
-            throw new Error(`The token is not verified! ${err}`)
-        }
+    if(!decodedToken)
+        throw new Error("The token is not verified!")
+        
 
-    });
-
+    return decodedToken as object;
 }
 

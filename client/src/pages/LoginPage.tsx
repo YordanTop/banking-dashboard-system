@@ -16,7 +16,7 @@ function LoginPage(){
 
             <LoginForm />
 
-            <section className='md:h-40 pt-5'>
+            <section className='md:h-25 pt-5'>
 
                 <main className='flex flex-col items-start justify-center p-5 mr-[5%] md:mr-0 ml-[5%] md:ml-[15%]
                                                         bg-white rounded-md shadow-md gap-4

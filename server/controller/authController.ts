@@ -1,108 +1,122 @@
-import {Request, Response, NextFunction} from 'express';
+import {Request, Response, NextFunction, CookieOptions} from 'express';
 
-import { CreateUserRequest } from '../dto/request/createUserRequest';
+import { RegisterUserRequest } from '../dto/request/registerUserRequest';
 
 import { AuthService } from '../service/authService';
 
 import { jwtConfiguration } from '../config/config';
 
 import { UserCredentialsRequest } from '../dto/request/userCredentialsRequest';
+import { BadBodyRequestException } from '../exception/http_request/badBodyRequestException';
+import { AuthenticationException } from '../exception/http_request/authenticationException';
 
 
 const authService = new AuthService();
 
-const authCookieName = "auth-cookie";
+interface authCookieOptions extends CookieOptions{
+
+    cookieName: string
+
+}
+
+
+const authCookie:authCookieOptions = {
+    cookieName:"auth-cookie",
+    httpOnly:true,
+    secure:true,
+    sameSite:"strict",
+    expires: new Date(jwtConfiguration.expiration),
+    maxAge: jwtConfiguration.expiration
+}
+
 
 /** Login user to the system */
 export const login = async (req:Request, res:Response) => {
     
-
-        const userCredentials = req.body as UserCredentialsRequest || undefined;
+    const userCredentials = req.body as UserCredentialsRequest || undefined;
 
         if(userCredentials == undefined){
-           return res.status(404).send({
-                status: 404,
-                message: "The fields: username; password are not defiend!"
-            }); 
+            throw new BadBodyRequestException("The body does not contain the right parameters!");
         }
 
         if(userCredentials.username == null){
-            return res.status(404).send({
-                status: 404,
-                message: "The user is not entered!"
-            });
+            throw new BadBodyRequestException("The username is not defiend!");
         }
 
         if(userCredentials.password == null){
-            return res.status(404).send({
-                status: 404,
-                message: "The password is not entered!"
-            });
+            throw new BadBodyRequestException("The password is not defiend!");
         }
     
-    try{
         const token = await authService.userCreateLoginToken(userCredentials);
 
         res.cookie(
-            authCookieName,token,{
-                httpOnly:true,
-                secure:true,
-                sameSite:"strict",
-                expires: new Date(jwtConfiguration.expiration),
-                maxAge: jwtConfiguration.expiration
-            }
+            authCookie.cookieName,token,authCookie
         )
-
-        return res.status(200).send({
+        
+        return res.status(200).json({
                 status: 200,
                 message: "The login was successful"
             });
-    }
-    catch(error){
-        return res.status(404).send({
-                status: 404,
-                message: `${error}`
-            });
-    }
     
 }
 
 /** Logout user to the system */
-export const logout = (req:Request, res:Response, next:NextFunction) => {
+export const logout = (req:Request, res:Response) => {
 
-    try{
-        res.clearCookie(authCookieName);
+    const authenticationCookie = req.cookies[authCookie.cookieName] || null;
 
-            return res.status(200).send({
+
+    if(authenticationCookie == null)
+        throw new AuthenticationException("The authentication cookie doesn't exists");
+
+    
+    res.clearCookie(authCookie.cookieName);
+
+
+    return res.status(200).json({
+            status: 200,
+            message: "The logout was successful"
+    });
+
+
+}
+
+export const getCredentials = (req:Request, res:Response) => {
+
+    const authenticationCookie = req.cookies[authCookie.cookieName] || null;
+
+
+    if(authenticationCookie == null)
+        throw new AuthenticationException("The authentication cookie doesn't exists");
+
+
+    authService.userGetCredentials(authenticationCookie)
+        .then((result) => {
+                return res.status(200).json({
                 status: 200,
-                message: "The logout was successful"
+                credentials: result
             });
-    }
-    catch(error){
-        return res.status(404).send({
-                status: 404,
-                message: `${error}`
-            });
-    }
+        })
+        .catch((error) => {throw new AuthenticationException(error)});
 
 }
 
 /** Register user to the system */
 export const register = (req:Request, res:Response, next:NextFunction) => {
 
-    const rawData = req.body as CreateUserRequest;
+    const rawData = req.body as RegisterUserRequest;
 
 
     try{
         authService.userRegister(rawData);   
 
-        return res.status(200).send({
+        return res.status(200).json({
                 status: 200,
                 message: "The user was successfully created!"
             });
     }
     catch(error){
-        return res.status(404).send({
+        return res.status(404).json({
                 status: 404,
                 message: `${error}`
             });
