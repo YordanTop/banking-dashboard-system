@@ -8,9 +8,8 @@ import FibankVideo from '../assets/fibank-place-background.mp4'
 import FibankTransaction from '../assets/transaction-stock-image.jpg'
 import { Link } from 'react-router';
 
-
 function HomePage() {
-    
+
     return (<>
 
       <NavigationBar />

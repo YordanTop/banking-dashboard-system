@@ -1,4 +1,4 @@
-import {CreateUserRequest} from "../dto/request/createUserRequest"
+import {RegisterUserRequest} from "../dto/request/registerUserRequest"
 import { UserCredentialsRequest } from "../dto/request/userCredentialsRequest"
 import { UserCredentials } from "../model/UserCredentials";
 
@@ -10,6 +10,13 @@ import { UserRole } from "../model/enums/UserRole";
 import { User } from "../model/User";
 import mongoose from "mongoose";
 
+import * as bcrypt from "bcrypt";
+import { NotFoundRecordException } from "../exception/http_request/notFoundRecordException";
+import { AuthorizationException } from "../exception/http_request/authorizationException";
+import { decodedAuthToken } from "../utilities/authToken"
+import { AuthenticationException } from "../exception/http_request/authenticationException";
+
+
 export class AuthService{
 
     private userRepository: UserRepository;
@@ -18,7 +25,7 @@ export class AuthService{
         this.userRepository = new UserRepository();
     }
 
-    public async userRegister(userRequest:CreateUserRequest){
+    public async userRegister(userRequest:RegisterUserRequest){
 
         const userFromDatabase = await this.userRepository.getUserCredentialsByUsername(userRequest.username);
 
@@ -74,16 +81,18 @@ export class AuthService{
         const userSelected = await this.userRepository.getUserCredentialsByUsername(userCredentialsRequest.username);
 
         if(userSelected?.username == null)
-            throw new Error("This user does not exists!");
+            throw new NotFoundRecordException("This user does not exists!");
+
 
         const matchPasswords = await bcrypt.compare(userCredentialsRequest.password, userSelected.password);
 
         if(matchPasswords == false)
-            throw new Error("This password is incorrect!");
+            throw new AuthorizationException("This password is incorrect!");
 
 
         const validatioTokenProperies = {
 
+                id: userSelected._id,
                 username: userSelected.username,
                 role: UserRole.USER
         }
@@ -92,5 +101,15 @@ export class AuthService{
 
     }
 
+    public async userGetCredentials(token:string):Promise<object>{
+
+        if(!token)
+            throw new AuthenticationException("Can not find JWT token information!");
+
+        const decodedToken = decodedAuthToken(token);
+
+        return decodedToken;
+
+    }
 
 }

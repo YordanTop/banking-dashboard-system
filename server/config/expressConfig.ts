@@ -4,7 +4,7 @@
 export interface ExpressConfiguration{
 
     // Express configuration 
-    url: string,
+    host: string,
     port: number
 
 }

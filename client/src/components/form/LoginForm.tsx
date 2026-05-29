@@ -1,16 +1,26 @@
 import UserIcon from '../../assets/icons/user-icon.svg'
 import PasswordIcon from '../../assets/icons/password-icon.svg'
-import { useForm } from 'react-hook-form'
+import { useForm, type SubmitHandler, type FieldValues } from 'react-hook-form'
 import { FormField } from '../field/FormField';
+import { axiosInstance } from '../../config/AxiosConfig';
  
-
+interface LoginFormInput extends FieldValues{
+    username: string,
+    password: string
+}
 
 export function LoginForm(){
 
-    const {register, handleSubmit, formState: {errors}} = useForm();
+    const {register, handleSubmit, formState: {errors}} = useForm<LoginFormInput>();
 
     //Handing the form validation
-    const onSubmit = () => {}
+    const onSubmit: SubmitHandler<LoginFormInput> = async (data: LoginFormInput) => {
+
+        await axiosInstance.post("auth/login",data)
+                .then(() => alert("Login was succesful!"))
+                .catch((err) => console.error(err));
+
+    }
 
     return (<>
 
@@ -27,26 +37,28 @@ export function LoginForm(){
             typeOfField="text"
             icon={UserIcon}
             register={register}
+            error={errors}
             validation={{
-                required:"Username field is requierd"
+                required:"Потребителското име е задължително!"
             }}
         />
 
         <FormField
         
-            fieldName="passport"
+            fieldName="password"
             labelText="* Парола:"
             typeOfField="password"
             icon={PasswordIcon}
             register={register}
+            error={errors}
             validation={{
-                required:"Username field is requierd"
+                required:"Паролата е задължителна!"
             }}
         />
 
         
 
-        <button type="submit" className="bg-blue-700 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded w-full">Вход</button>
+        <button type="submit" className="bg-blue-700 hover:bg-blue-500 text-white font-bold py-2 px-4  rounded w-full cursor-pointer">Вход</button>
    
     </form>
     

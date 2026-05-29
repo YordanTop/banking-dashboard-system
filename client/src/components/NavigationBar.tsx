@@ -44,7 +44,7 @@ function NavigationBar() {
         </nav>
 
         { /* Desktop version for navigation bar */ }
-        <nav id='top-navigation-bar' className='max-lg:hidden flex items-center justify-between shadow-xl rounded-md bg-white w-full' >
+        <nav id='top-navigation-bar' className='text-sm max-lg:hidden flex items-center justify-between shadow-xl rounded-md bg-white w-full' >
 
                 <Link to="/">
                     <img src={logo} className='w-40' alt='Fibank Logo'></img>
@@ -52,29 +52,29 @@ function NavigationBar() {
 
             <div id="top-navigation-options" className='flex flex-wrap items-center justify-between gap-5'>
 
-                <button className='hover:cursor-pointer text-md'>English</button>
+                <button className='hover:cursor-pointer'>English</button>
 
-                <a href='' className='flex text-md'>
-                    <img src={monitor} className='w-5 h-5 mr-2 ' alt='Fibank Logo'></img>
+                <Link to="/" className='flex'>
+                    <img src={monitor} className='w-4 h-4 mr-2 ' alt='Fibank Logo'></img>
                     Към сайта
-                </a>
+                </Link>
 
 
-                <a href='' className='flex text-md'>
-                    <img src={android} className='w-5 h-5 mr-2' alt='Fibank Logo'></img>
-                    <img src={apple} className='w-5 h-5 mr-2' alt='Fibank Logo'></img>
+                <Link to="/" className='flex'>
+                    <img src={android} className='w-4 h-4 mr-2' alt='Fibank Logo'></img>
+                    <img src={apple} className='w-4 h-4 mr-2' alt='Fibank Logo'></img>
                     Мобилно приложение
-                </a>
+                </Link>
 
-                <a href=''className='flex text-md'>
-                    <img src={notes} className='w-5 h-5 mr-2' alt='Fibank Logo'></img>
+                <Link to="/" className='flex'>
+                    <img src={notes} className='w-4 h-4 mr-2' alt='Fibank Logo'></img>
                     Промени в ОУ тарифа
-                </a>
+                </Link>
 
-                <a href='' className='flex text-md'>
-                    <img src={informaiton} className='w-5 h-5 mr-2' alt='Fibank Logo'></img>
+                <Link to="/" className='flex'>
+                    <img src={informaiton} className='w-4 h-4 mr-2' alt='Fibank Logo'></img>
                     Помощ
-                </a>
+                </Link>
 
                 
             </div>

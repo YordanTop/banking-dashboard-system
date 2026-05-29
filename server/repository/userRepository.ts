@@ -9,7 +9,7 @@ export class UserRepository{
 
         const userFromDatabase = await userModel.find({credentialID: user.credentialID});
 
-        if(userFromDatabase.length > 0)
+        if(!userFromDatabase)
             return;
         
         const newUser = new userModel(user);
@@ -23,7 +23,7 @@ export class UserRepository{
 
         const userCredentialsFromDatabase = await userCredentialsModel.find({username: userCredentials.username});
 
-        if(userCredentialsFromDatabase.length > 0)
+        if(!userCredentialsFromDatabase)
             return;
 
         const newUserCredentials = new userCredentialsModel(userCredentials);
