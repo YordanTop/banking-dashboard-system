@@ -4,7 +4,6 @@ export interface RegisterUserRequest{
 
     egn: string
     uic?: string
-    fullnameCyrillic: string,
     fullnameLatin: string,
     email: string,
     phoneNumber: string,
