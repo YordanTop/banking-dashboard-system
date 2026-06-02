@@ -6,11 +6,12 @@ import cookieParser from "cookie-parser"
 //import userRouter from "./router/userRouter";
 import authRouter from "./router/authRouter";
 
-import {databaseConfiguration, clientUrlCofiguration, serverConfiguration } from "./config/config";
+import {databaseConfiguration, clientUrlCofiguration, serverConfiguration, dataMockConfiguration } from "./config/config";
 import { requestExceptionHandler } from "./middleware/requestExceptionHandler";
 import { ServerEnvPropertiesHandler } from "./config/handler/serverEnvPropertiesHandler";
 import { JwtEnvPropertiesHandler } from "./config/handler/jwtEnvPropertiesHandler";
 import { DatabaseEnvPropertiesHandler } from "./config/handler/databaseEnvPropertiesHandler";
+import { DataSeeder } from "./utilities/data_seed/dataSeeder";
 
 
 
@@ -34,12 +35,17 @@ const databaseURL = `${databaseConfiguration.uri}:${databaseConfiguration.port}/
 
 try {
 
+  
   ServerEnvPropertiesHandler();
   JwtEnvPropertiesHandler();
   DatabaseEnvPropertiesHandler();
 
+  console.log()
+
   await mongoose.connect(databaseURL);
   console.log("Connection with the mongodb database was establish!");
+
+  await DataSeeder();
 
   /** Starting the server */
   app.listen(serverConfiguration.port,serverConfiguration.host ,() =>{

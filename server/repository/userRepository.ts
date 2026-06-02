@@ -56,7 +56,6 @@ export class UserRepository{
         userFromDatabase.egn = user.egn;
         userFromDatabase.address = user.address;
         userFromDatabase.uic = user.uic;
-        userFromDatabase.fullnameCyrillic = user.fullnameCyrillic;
         userFromDatabase.fullnameLatin = user.fullnameLatin;
         userFromDatabase.email = user.email;
         userFromDatabase.phoneNumber = user.phoneNumber;
