@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { axiosInstance } from "../config/AxiosConfig";
 
-
 /** authState checks if the user currently has authentication info and if it does
  *  it caches the current users session! */
 export function useAuthState(){
@@ -21,7 +20,7 @@ export function useAuthState(){
             
 
             if(!credentials){
-                setCacheAuth({});
+                setCacheAuth(undefined);
                 setIsDataLoaded(true);
                 setIsRequestCrashed(false);
                 return;
@@ -40,7 +39,7 @@ export function useAuthState(){
             setCacheAuth(userData);
         }catch(err){
             console.log(`Data has fail to be captured: ${err}`)
-            setCacheAuth({});
+            setCacheAuth(undefined);
             setIsDataLoaded(true);
             setIsRequestCrashed(true);
         }

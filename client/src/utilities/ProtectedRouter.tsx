@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState, type ReactNode } from "react";
+import { useContext,  type ReactNode } from "react";
 import { AuthenticationContext } from "../context/AuthenticationContext";
 import { Navigate } from "react-router";
 

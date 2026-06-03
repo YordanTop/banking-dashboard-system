@@ -1,0 +1,68 @@
+{
+
+    "nav_basic":{
+        "language": "English",
+        "home": "Home Page",
+        "mobile_version":"Mobile Version",
+        "basic_services":"Changes in Terms and Tariffs",
+        "help": "Help",
+
+        "registation_button": "Sign up",
+        "login_button": "Sign in"
+    },
+
+    "nav_personal":{
+
+    },
+
+    "home_page":{
+        "motto":"First Investment Bank!",
+
+        "registation_button": "Sign up",
+        "login_button": "Sign in",
+
+        "left_card":{
+            "title": "Smart ways for accounting your finances",
+            "description": "We create secure digital solutions for easy investing and full control over your capital."
+        },
+
+        "right_card":{
+            "title": "Fast and seamless transactions",
+            "description": "Pay effortlessly with contactless technology and track every single expense in real time directly from your app."
+        }
+    },
+
+    "login_page":{
+
+        "form":{
+            "title": "Вход в My Fibank",
+            "user_label": "Потребител",
+            "password_label": "Парола",
+
+            "error_handle":{
+                "required_field": "Това поле е задължително!"
+            }
+        }
+
+
+
+    },
+
+    "register_page":{
+        
+    },
+
+    "footer_basic":{
+        "link_1":"How to add accounts",
+        "link_2":"Everything in one profile",
+        "link_3":"Registration process",
+        "link_4":"Electronic signature",
+        "link_5":"Fees and commissions",
+        "link_6":"Documents",
+
+        "motto":"First Investment Bank!"
+    }
+
+
+
+}
