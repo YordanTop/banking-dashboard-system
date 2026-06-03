@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from "express";
 
 /** Create user based of the model User  */
 export const createUser = (req:Request, res:Response, next:NextFunction) => {
-
+    
 }
 
 /** Update user with new information  */

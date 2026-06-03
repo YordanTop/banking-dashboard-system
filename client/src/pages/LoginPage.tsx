@@ -1,14 +1,16 @@
-import NavigationBar from '../components/NavigationBar.tsx'
 import MainFooter from '../components/MainFooter.tsx'
 import { LoginForm } from '../components/form/LoginForm.tsx'
+import { RedirectNonLoggedInUser } from '../utilities/RedirectNonLoggedInUser.tsx';
+import TopNavigationBar from '../components/bar/NavigationBar.tsx';
 
 
 function LoginPage(){
 
+    RedirectNonLoggedInUser("/statistic");
 
     return(<>   
 
-        <NavigationBar />
+        <TopNavigationBar />
 
         <main className="flex flex-col min-h-[calc(100vh_-_154px)] md:flex-row">
 
@@ -32,7 +34,7 @@ function LoginPage(){
 
             <aside className='p-5 md:p-0 md:pt-10 md:pb-5 md:h-135 md:w-full'>
                     
-                <main className='flex flex-col items-start justify-center p-5 mr-[5%]  ml-[5%] md:ml-5
+                <main className='flex flex-col items-start justify-center p-5 mr-[5%] ml-[5%] md:ml-5
                                 bg-white rounded-md shadow-md gap-4 h-full'>
 
                     <p className='text-xl'>Инфо</p>

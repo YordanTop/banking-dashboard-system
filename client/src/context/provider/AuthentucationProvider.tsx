@@ -1,6 +1,6 @@
-import { useEffect, useState, type ReactNode } from "react";
-import { AuthenticationContext, type UserAuthenticationContext } from "./AuthenticationContext";
-import { useAuthState } from "../hooks/AuthenticationHook";
+import { useEffect, type ReactNode } from "react";
+import { AuthenticationContext, type UserAuthenticationContext } from "../AuthenticationContext";
+import { useAuthState } from "../../hooks/AuthenticationHook";
 
 
 export default function AuthenticationProvider({children}:{children:ReactNode}){

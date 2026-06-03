@@ -1,16 +1,19 @@
-import logo from '../assets/fibank-logo.png'
-import android from '../assets/android.png'
-import apple from '../assets/apple.png'
-import informaiton from '../assets/informaiton.png'
-import monitor from '../assets/monitor.png'
-import notes from '../assets/notes.png'
-import ToggleMenu from './toggle/ToggleMenu'
+import logo from '../../assets/fibank-logo.png'
+import android from '../../assets/android.png'
+import apple from '../../assets/apple.png'
+import informaiton from '../../assets/informaiton.png'
+import monitor from '../../assets/monitor.png'
+import notes from '../../assets/notes.png'
+import ToggleMenu from '../toggle/ToggleMenu'
 import { useState } from 'react'
-import { Link } from 'react-router';
+import { Link, NavLink } from 'react-router';
+import { useTranslation } from 'react-i18next'
 
-function NavigationBar() {
+function TopNavigationBar() {
 
     const[isToggelMenuOpen,setIsToggleOpen] = useState(false);
+
+    const { t } = useTranslation();
 
     return(
 
@@ -46,41 +49,42 @@ function NavigationBar() {
         { /* Desktop version for navigation bar */ }
         <nav id='top-navigation-bar' className='text-sm max-lg:hidden flex items-center justify-between shadow-xl rounded-md bg-white w-full' >
 
-                <Link to="/">
+                <NavLink to="/">
                     <img src={logo} className='w-40' alt='Fibank Logo'></img>
-                </Link>
-
+                </NavLink>
+ 
             <div id="top-navigation-options" className='flex flex-wrap items-center justify-between gap-5'>
 
-                <button className='hover:cursor-pointer'>English</button>
+                <button className='hover:cursor-pointer'>{t('nav_basic.language')}</button>
 
                 <Link to="/" className='flex'>
                     <img src={monitor} className='w-4 h-4 mr-2 ' alt='Fibank Logo'></img>
-                    Към сайта
+                    {t("nav_basic.home")}
                 </Link>
 
 
                 <Link to="/" className='flex'>
                     <img src={android} className='w-4 h-4 mr-2' alt='Fibank Logo'></img>
                     <img src={apple} className='w-4 h-4 mr-2' alt='Fibank Logo'></img>
-                    Мобилно приложение
+                    {t("nav_basic.mobile_version")}
                 </Link>
 
                 <Link to="/" className='flex'>
                     <img src={notes} className='w-4 h-4 mr-2' alt='Fibank Logo'></img>
-                    Промени в ОУ тарифа
+                    {t("nav_basic.basic_services")}
                 </Link>
 
                 <Link to="/" className='flex'>
                     <img src={informaiton} className='w-4 h-4 mr-2' alt='Fibank Logo'></img>
-                    Помощ
+                    {t("nav_basic.help")}
                 </Link>
 
                 
             </div>
                 
-            <button id='sign-button' className='p-2 mr-3 bg-gray-300 hover:bg-gray-400 hover:cursor-pointer'>Регистрация</button>
-
+            <Link to="/register" className='flex'>
+                <button id='sign-button' className='p-2 mr-3 bg-gray-300 hover:bg-gray-400 hover:cursor-pointer'>{t("nav_basic.registation_button")}</button>
+            </Link>    
         </nav>
 
         </>
@@ -88,4 +92,4 @@ function NavigationBar() {
 
 }
 
-export default NavigationBar;
+export default TopNavigationBar;

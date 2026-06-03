@@ -1,6 +1,6 @@
 import {Request, Response, NextFunction, CookieOptions} from 'express';
 
-import { RegisterUserRequest } from '../dto/request/registerUserRequest';
+import { CreateUserRequest } from '../dto/request/createUserRequest';
 
 import { AuthService } from '../service/authService';
 
@@ -20,7 +20,7 @@ interface authCookieOptions extends CookieOptions{
 }
 
 
-const authCookie:authCookieOptions = {
+export const authCookie:authCookieOptions = {
     cookieName:"auth-cookie",
     httpOnly:true,
     secure:true,
@@ -47,16 +47,17 @@ export const login = async (req:Request, res:Response) => {
             throw new BadBodyRequestException("The password is not defiend!");
         }
     
-        const token = await authService.userCreateLoginToken(userCredentials);
-
-        res.cookie(
-            authCookie.cookieName,token,authCookie
-        )
+        const token = await authService.userCreateLoginToken(userCredentials)
+        .then(() => {
+                    res.cookie(
+                        authCookie.cookieName,token,authCookie
+                    )
         
-        return res.status(200).json({
-                status: 200,
-                message: "The login was successful"
-            });
+                    return res.status(200).json({
+                            status: 200,
+                            message: "The login was successful"
+                        });
+        }).catch((error) => {throw new AuthenticationException(error)});
     
 }
 
@@ -104,7 +105,7 @@ export const getCredentials = (req:Request, res:Response) => {
 /** Register user to the system */
 export const register = (req:Request, res:Response, next:NextFunction) => {
 
-    const rawData = req.body as RegisterUserRequest;
+    const rawData = req.body as CreateUserRequest;
 
 
     try{

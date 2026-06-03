@@ -1,4 +1,4 @@
-import {RegisterUserRequest} from "../dto/request/registerUserRequest"
+import {CreateUserRequest} from "../dto/request/createUserRequest"
 import { UserCredentialsRequest } from "../dto/request/userCredentialsRequest"
 import { UserCredentials } from "../model/UserCredentials";
 
@@ -15,64 +15,22 @@ import { NotFoundRecordException } from "../exception/http_request/notFoundRecor
 import { AuthorizationException } from "../exception/http_request/authorizationException";
 import { decodedAuthToken } from "../utilities/authToken"
 import { AuthenticationException } from "../exception/http_request/authenticationException";
+import { UserService } from "./userService";
 
 
 export class AuthService{
 
     private userRepository: UserRepository;
+    private userService: UserService;
 
     constructor( ){
         this.userRepository = new UserRepository();
+        this.userService = new UserService();
     }
 
-    public async userRegister(userRequest:RegisterUserRequest){
+    public async userRegister(userRequest:CreateUserRequest){
 
-        const userFromDatabase = await this.userRepository.getUserCredentialsByUsername(userRequest.username);
-
-        if(userFromDatabase != null)
-            throw new Error("This user already exists!");
-
-        try{
-
-            const transactionSession = await mongoose.startSession();
-
-            await transactionSession.withTransaction(async () =>{
-                
-                const userCredentialsId = new mongoose.Types.ObjectId();
-
-                const userMapping: User = {
-
-                    egn: userRequest.egn,
-                    uic: userRequest.uic,
-                    fullnameCyrillic: userRequest.fullnameCyrillic,
-                    fullnameLatin: userRequest.fullnameLatin,
-                    email: userRequest.email,
-                    phoneNumber: userRequest.phoneNumber,
-                    address: userRequest.address,
-                    credentialID: userCredentialsId, 
-
-                }
-
-                const userCredentialsMapping: UserCredentials = {
-
-                    _id: userCredentialsId,
-                    username: userRequest.username,
-                    password: userRequest.password,
-                    role: UserRole.USER
-
-                }
-                
-                await this.userRepository.createUser(userMapping, transactionSession);
-                await this.userRepository.createUserCredentials(userCredentialsMapping, transactionSession);
-
-            });
-            
-            await transactionSession.endSession();
-            
-        }catch(error){
-
-            throw new Error("Creating user transaction was terminated!" + error)
-        }
+        await this.userService.createUser(userRequest).catch()
 
     }
 

@@ -1,6 +1,6 @@
 import { UserRole } from "../../model/enums/UserRole"
 
-export interface RegisterUserRequest{ 
+export interface CreateUserRequest{ 
 
     egn: string
     uic?: string

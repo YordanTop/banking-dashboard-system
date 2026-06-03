@@ -68,19 +68,6 @@ export function RegisterForm(){
             />
             <FormField
             
-                fieldName="fullnameCyrillic"
-                labelText="* Име и фамилия на кирилица:"
-                typeOfField="text"
-                register={register}
-                
-                validation={{
-                    required:"Полето е задължително!"
-                }}
-                error={errors}
-
-            />
-            <FormField
-            
                 fieldName="fullnameLatin"
                 labelText="*  Име и фамилия на латиница:"
                 typeOfField="text"

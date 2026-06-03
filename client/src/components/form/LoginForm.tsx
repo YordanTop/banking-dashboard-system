@@ -3,6 +3,8 @@ import PasswordIcon from '../../assets/icons/password-icon.svg'
 import { useForm, type SubmitHandler, type FieldValues } from 'react-hook-form'
 import { FormField } from '../field/FormField';
 import { axiosInstance } from '../../config/AxiosConfig';
+import { useNavigate } from 'react-router';
+import { HttpStatusCode } from 'axios';
  
 interface LoginFormInput extends FieldValues{
     username: string,
@@ -13,11 +15,21 @@ export function LoginForm(){
 
     const {register, handleSubmit, formState: {errors}} = useForm<LoginFormInput>();
 
+    const navigation = useNavigate();
+
     //Handing the form validation
     const onSubmit: SubmitHandler<LoginFormInput> = async (data: LoginFormInput) => {
 
         await axiosInstance.post("auth/login",data)
-                .then(() => alert("Login was succesful!"))
+                .then(
+                    (result) => {
+                        if(result.data.status === HttpStatusCode.Accepted)
+                        {
+                            navigation("/statistic",{ replace: true })
+                        }
+                    }
+                
+                    )
                 .catch((err) => console.error(err));
 
     }
