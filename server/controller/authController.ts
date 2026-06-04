@@ -9,6 +9,7 @@ import { jwtConfiguration } from '../config/config';
 import { UserCredentialsRequest } from '../dto/request/userCredentialsRequest';
 import { BadBodyRequestException } from '../exception/http_request/badBodyRequestException';
 import { AuthenticationException } from '../exception/http_request/authenticationException';
+import { RecordConflictException } from '../exception/http_request/recordConflictException';
 
 
 const authService = new AuthService();
@@ -31,7 +32,7 @@ export const authCookie:authCookieOptions = {
 
 
 /** Login user to the system */
-export const login = async (req:Request, res:Response) => {
+export const login = async (req:Request, res:Response, next:NextFunction) => {
     
     const userCredentials = req.body as UserCredentialsRequest || undefined;
 
@@ -48,27 +49,27 @@ export const login = async (req:Request, res:Response) => {
         }
     
         const token = await authService.userCreateLoginToken(userCredentials)
-        .then(() => {
+        .then((result) => {
                     res.cookie(
-                        authCookie.cookieName,token,authCookie
+                        authCookie.cookieName,result,authCookie
                     )
         
                     return res.status(200).json({
                             status: 200,
                             message: "The login was successful"
                         });
-        }).catch((error) => {throw new AuthenticationException(error)});
+        }).catch((error) => {next(new AuthenticationException(error.message))});
     
 }
 
 /** Logout user to the system */
-export const logout = (req:Request, res:Response) => {
+export const logout = (req:Request, res:Response,next:NextFunction) => {
 
     const authenticationCookie = req.cookies[authCookie.cookieName] || null;
 
 
     if(authenticationCookie == null)
-        throw new AuthenticationException("The authentication cookie doesn't exists");
+        next(new AuthenticationException("The authentication cookie doesn't exists"));
 
     
     res.clearCookie(authCookie.cookieName);
@@ -82,7 +83,7 @@ export const logout = (req:Request, res:Response) => {
 
 }
 
-export const getCredentials = (req:Request, res:Response) => {
+export const getCredentials = (req:Request, res:Response, next:NextFunction) => {
 
     const authenticationCookie = req.cookies[authCookie.cookieName] || null;
 
@@ -98,7 +99,7 @@ export const getCredentials = (req:Request, res:Response) => {
                 credentials: result
             });
         })
-        .catch((error) => {throw new AuthenticationException(error)});
+        .catch((error) => {next(new AuthenticationException(error.message))});
 
 }
 
@@ -107,21 +108,16 @@ export const register = (req:Request, res:Response, next:NextFunction) => {
 
     const rawData = req.body as CreateUserRequest;
 
-
-    try{
-        authService.userRegister(rawData);   
-
-        return res.status(200).json({
+    authService.userRegister(rawData)
+        .then(()=>{
+            return res.status(200).json({
                 status: 200,
                 message: "The user was successfully created!"
-            });
-    }
-    catch(error){
-        return res.status(404).json({
-                status: 404,
-                message: `${error}`
-            });
-    }
+                });
+        })
+        .catch((error) => {
+        next(new RecordConflictException(error.message))
+    });   
 
 }
 

@@ -16,6 +16,7 @@ import { AuthorizationException } from "../exception/http_request/authorizationE
 import { decodedAuthToken } from "../utilities/authToken"
 import { AuthenticationException } from "../exception/http_request/authenticationException";
 import { UserService } from "./userService";
+import { error } from "console";
 
 
 export class AuthService{
@@ -30,14 +31,14 @@ export class AuthService{
 
     public async userRegister(userRequest:CreateUserRequest){
 
-        await this.userService.createUser(userRequest).catch()
+        await this.userService.createUser(userRequest);
 
     }
 
     public async userCreateLoginToken(userCredentialsRequest:UserCredentialsRequest){
 
         const userSelected = await this.userRepository.getUserCredentialsByUsername(userCredentialsRequest.username);
-
+  
         if(userSelected?.username == null)
             throw new NotFoundRecordException("This user does not exists!");
 

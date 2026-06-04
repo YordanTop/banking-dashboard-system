@@ -1,57 +1,49 @@
 import mongoose, { ClientSession } from "mongoose";
-import { userModel, User} from "../model/User";
+import { userModel, User } from "../model/User";
 import { userCredentialsModel, UserCredentials } from "../model/UserCredentials";
 
+export class UserRepository {
 
-export class UserRepository{
+    async createUser(user: User, transactionSession?: ClientSession) {
+        const userFromDatabase = await userModel.findOne({ credentialID: user.credentialID }).lean<User | null>();
 
-    async createUser(user: User, transactionSession?: ClientSession){
+        if (userFromDatabase)
+            throw new Error("User already exists with this credential reference.");
 
-        const userFromDatabase = await userModel.find({credentialID: user.credentialID});
-
-        if(!userFromDatabase)
-            return;
-        
         const newUser = new userModel(user);
-
-
-        await newUser.save({session: transactionSession});
-
+        await newUser.save({ session: transactionSession });
     }
 
-    async createUserCredentials(userCredentials: UserCredentials, transactionSession?: ClientSession){
+    async createUserCredentials(userCredentials: UserCredentials, transactionSession?: ClientSession) {
+        const userCredentialsFromDatabase = await userCredentialsModel.findOne({ username: userCredentials.username }).lean<UserCredentials | null>();
 
-        const userCredentialsFromDatabase = await userCredentialsModel.find({username: userCredentials.username});
-
-        if(!userCredentialsFromDatabase)
-            return;
+        if (userCredentialsFromDatabase)
+            throw new Error("User credentials already exist for this username.");
 
         const newUserCredentials = new userCredentialsModel(userCredentials);
-
-        await newUserCredentials.save({session: transactionSession});
-
+        await newUserCredentials.save({ session: transactionSession });
     }
 
-    async getAllUsers():Promise<Array<User> | null>{
-
-        const users = await userModel.find().lean<User[]>();
-        return users;
-
+    async getAllUsers(): Promise<Array<User> | null> {
+        return await userModel.find().lean<User[]>();
     }
 
-    async getUserCredentialsByUsername(username: string):Promise<UserCredentials | null>{
-        const userFromDatabase = await userCredentialsModel.findOne({username: username}).lean<UserCredentials>();
-        return userFromDatabase;
+    async getUserCredentialsByUsername(username: string): Promise<UserCredentials | null> {
+        return await userCredentialsModel.findOne({ username }).lean<UserCredentials | null>();
     }
 
+    async getUserByUsername(username: string): Promise<User | null> {
+        const credentials = await userCredentialsModel.findOne({ username }).lean<UserCredentials | null>();
+        if (!credentials)
+            return null;
 
-    async updateUser(user: User){
+        return await userModel.findOne({ credentialID: credentials._id }).lean<User | null>();
+    }
 
-        let userFromDatabase = await userModel.findById(user.credentialID);
-
-        if(userFromDatabase == null)
-            return;
-        
+    async updateUser(user: User): Promise<User | null> {
+        const userFromDatabase = await userModel.findById(user._id);
+        if (!userFromDatabase)
+            return null;
 
         userFromDatabase.egn = user.egn;
         userFromDatabase.address = user.address;
@@ -59,11 +51,38 @@ export class UserRepository{
         userFromDatabase.fullnameLatin = user.fullnameLatin;
         userFromDatabase.email = user.email;
         userFromDatabase.phoneNumber = user.phoneNumber;
-        
 
-        await userFromDatabase?.save();
-
+        const updatedUser = await userFromDatabase.save();
+        return updatedUser.toObject();
     }
 
+    async updatePasswordByUsername(username: string, newPassword: string): Promise<UserCredentials | null> {
+        const credentials = await userCredentialsModel.findOne({ username });
+        if (!credentials)
+            return null;
 
+        credentials.password = newPassword;
+        const updatedCredentials = await credentials.save();
+        return updatedCredentials.toObject();
+    }
+
+    async updateRoleByUsername(username: string, newRole: string): Promise<UserCredentials | null> {
+        const credentials = await userCredentialsModel.findOne({ username });
+        if (!credentials)
+            return null;
+
+        credentials.role = newRole as any;
+        const updatedCredentials = await credentials.save();
+        return updatedCredentials.toObject();
+    }
+
+    async deleteUser(user: User, transactionSession?: ClientSession): Promise<boolean> {
+        const userFromDatabase = await userModel.findById(user._id).session(transactionSession ?? null);
+        if (!userFromDatabase)
+            return false;
+
+        await userModel.deleteOne({ _id: user._id }).session(transactionSession ?? null);
+        await userCredentialsModel.deleteOne({ _id: user.credentialID }).session(transactionSession ?? null);
+        return true;
+    }
 }

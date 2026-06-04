@@ -3,9 +3,11 @@ import PasswordIcon from '../../assets/icons/password-icon.svg'
 import { useForm, type SubmitHandler, type FieldValues } from 'react-hook-form'
 import { FormField } from '../field/FormField';
 import { axiosInstance } from '../../config/AxiosConfig';
-import { useNavigate } from 'react-router';
-import { HttpStatusCode } from 'axios';
- 
+import { useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
+import { AuthenticationContext } from '../../context/AuthenticationContext';
+
+
 interface LoginFormInput extends FieldValues{
     username: string,
     password: string
@@ -13,24 +15,30 @@ interface LoginFormInput extends FieldValues{
 
 export function LoginForm(){
 
-    const {register, handleSubmit, formState: {errors}} = useForm<LoginFormInput>();
+    const {register, handleSubmit, formState: {errors}} = useForm<LoginFormInput>({mode: 'onBlur'});
 
-    const navigation = useNavigate();
+    const navigate = useNavigate();
+    const authentication = useContext(AuthenticationContext);
 
     //Handing the form validation
     const onSubmit: SubmitHandler<LoginFormInput> = async (data: LoginFormInput) => {
+            
+        await axiosInstance.post("auth/login", data)
+            .then(async (result) => {
 
-        await axiosInstance.post("auth/login",data)
-                .then(
-                    (result) => {
-                        if(result.data.status === HttpStatusCode.Accepted)
-                        {
-                            navigation("/statistic",{ replace: true })
-                        }
-                    }
-                
-                    )
-                .catch((err) => console.error(err));
+                await authentication?.rewriteAuthenticationCache()
+                .catch((error) =>{
+                    console.warn(`Server could not fetch the data! ${error}`);
+                })
+
+                navigate('/statistic', { replace: true });
+
+                console.warn('Unexpected login response:', result.status, result.data);
+            
+            })
+            .catch((error) => {
+                console.error('Login request failed', error);
+            });
 
     }
 
@@ -51,7 +59,8 @@ export function LoginForm(){
             register={register}
             error={errors}
             validation={{
-                required:"Потребителското име е задължително!"
+                required:"Потребителското име е задължително!",
+                
             }}
         />
 

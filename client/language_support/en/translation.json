@@ -8,7 +8,9 @@
         "help": "Help",
 
         "registation_button": "Sign up",
-        "login_button": "Sign in"
+        "login_button": "Sign in",
+
+        "logout_button": "Sign out"
     },
 
     "nav_personal":{

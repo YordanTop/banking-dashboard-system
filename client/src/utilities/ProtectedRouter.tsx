@@ -1,6 +1,6 @@
 import { useContext,  type ReactNode } from "react";
 import { AuthenticationContext } from "../context/AuthenticationContext";
-import { Navigate } from "react-router";
+import { Navigate } from "react-router-dom";
 
 export function ProtectedRouter({children}:{children:ReactNode}){
 
@@ -22,5 +22,5 @@ export function ProtectedRouter({children}:{children:ReactNode}){
 
 
 
-    return children;
+    return <>{children}</>;
 }

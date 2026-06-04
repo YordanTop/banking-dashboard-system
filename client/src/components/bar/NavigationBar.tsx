@@ -1,94 +1,85 @@
-import logo from '../../assets/fibank-logo.png'
-import android from '../../assets/android.png'
-import apple from '../../assets/apple.png'
-import informaiton from '../../assets/informaiton.png'
-import monitor from '../../assets/monitor.png'
-import notes from '../../assets/notes.png'
-import ToggleMenu from '../toggle/ToggleMenu'
-import { useState } from 'react'
 import { Link, NavLink } from 'react-router';
-import { useTranslation } from 'react-i18next'
+import type NavigationOption from './NavigationOption'
+import type { NavigationButton, NavigationLink, NavigationLogo } from './NavigationOption'
 
-function TopNavigationBar() {
 
-    const[isToggelMenuOpen,setIsToggleOpen] = useState(false);
+function TopNavigationBar({barConfiguration}: {barConfiguration: NavigationOption}){
 
-    const { t } = useTranslation();
 
-    return(
+    return(<>
 
-        <>
-        { /* Mobile version for navigation bar */ }
-        <nav>
+            { /* Desktop version for navigation bar */ }
+            <nav id='top-navigation-bar' className='text-sm max-lg:hidden flex items-center justify-between shadow-xl rounded-md bg-white w-full' >
 
-            <nav id='top-navigation-bar' className='lg:hidden flex items-center justify-between shadow-xl rounded-md bg-white' >
+                {barConfiguration.logo && <LogoDisplay logo={barConfiguration.logo}/>}
                 
-                <Link to="/">
-                    <img src={logo} className='w-40' alt='Fibank Logo'></img>
-                </Link>
 
-                <ToggleMenu
+                <ul className="flex flex-wrap items-center justify-between gap-5">
+                {
+                    barConfiguration.links?.map((link) =>(
+                        <LinkDisplay link={link} ></LinkDisplay>
+                    ))
 
-                    isToggleClicked={isToggelMenuOpen}
-                    setIsToggleClicked={setIsToggleOpen}
-                />
+                }
+                </ul>
 
+                <ul className="flex flex-wrap items-center justify-between gap-5">
+                {
+                    barConfiguration.buttons?.map((button) =>(
+                        <ButtonDisplay button={button} ></ButtonDisplay>
+                    ))
+
+                }
+                </ul>
 
             </nav>
+    
+    </>);
 
-            {/* The linking routes  */}
-            <article className='md:hidden flex flex-col item-center shadow-xl rounded-md bg-white'>
+}
 
-               
-
-            </article>
-
-
-        </nav>
-
-        { /* Desktop version for navigation bar */ }
-        <nav id='top-navigation-bar' className='text-sm max-lg:hidden flex items-center justify-between shadow-xl rounded-md bg-white w-full' >
-
-                <NavLink to="/">
-                    <img src={logo} className='w-40' alt='Fibank Logo'></img>
-                </NavLink>
+function LogoDisplay({logo}:{logo:NavigationLogo}){
+           return(<>
+            
+            <NavLink to={`/${logo.rediraction}`}>
+                    <img src={logo.iconSource} className='w-40' alt='Fibank Logo'></img>
+            </NavLink>
  
-            <div id="top-navigation-options" className='flex flex-wrap items-center justify-between gap-5'>
+        </>)
+}
 
-                <button className='hover:cursor-pointer'>{t('nav_basic.language')}</button>
+function LinkDisplay({link}:{link:NavigationLink}){
 
-                <Link to="/" className='flex'>
-                    <img src={monitor} className='w-4 h-4 mr-2 ' alt='Fibank Logo'></img>
-                    {t("nav_basic.home")}
+        return(<>
+            <Link to={`/${link.rediraction}`} className='flex'>
+                    <img src={link.iconSource} className='w-4 h-4 mr-2 '></img>
+                    {link.text}
                 </Link>
+        </>)
 
+}
 
-                <Link to="/" className='flex'>
-                    <img src={android} className='w-4 h-4 mr-2' alt='Fibank Logo'></img>
-                    <img src={apple} className='w-4 h-4 mr-2' alt='Fibank Logo'></img>
-                    {t("nav_basic.mobile_version")}
+function ButtonDisplay({button}:{button:NavigationButton}){
+
+    return(<>
+            {
+                button.onClick && 
+                <div className='flex'>
+                     <button onClick={button.onClick} className='p-2 mr-3 bg-gray-300 hover:bg-gray-400 hover:cursor-pointer'>
+                            {button.text}
+                    </button>
+                </div>
+            }
+
+            {
+                button.rediraction && 
+                <Link to={`/${button.rediraction}`}  className='flex'>
+                     <button className='p-2 mr-3 bg-gray-300 hover:bg-gray-400 hover:cursor-pointer'>
+                            {button.text}
+                    </button>
                 </Link>
-
-                <Link to="/" className='flex'>
-                    <img src={notes} className='w-4 h-4 mr-2' alt='Fibank Logo'></img>
-                    {t("nav_basic.basic_services")}
-                </Link>
-
-                <Link to="/" className='flex'>
-                    <img src={informaiton} className='w-4 h-4 mr-2' alt='Fibank Logo'></img>
-                    {t("nav_basic.help")}
-                </Link>
-
-                
-            </div>
-                
-            <Link to="/register" className='flex'>
-                <button id='sign-button' className='p-2 mr-3 bg-gray-300 hover:bg-gray-400 hover:cursor-pointer'>{t("nav_basic.registation_button")}</button>
-            </Link>    
-        </nav>
-
-        </>
-    )
+            }
+        </>)
 
 }
 

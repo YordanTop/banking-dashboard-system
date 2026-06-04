@@ -18,6 +18,8 @@ export default function AuthenticationProvider({children}:{children:ReactNode}){
              checkAuthState(); 
     }, []); 
 
+    
+
     return(
         <>
         
