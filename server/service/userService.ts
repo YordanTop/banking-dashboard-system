@@ -17,12 +17,11 @@ export class UserService{
 
     async createUser(userRequest: CreateUserRequest){
 
-        //@todo handlers for the user parameter
-
        const userFromDatabase = await this.userRepository.getUserCredentialsByUsername(userRequest.username);
 
         if(userFromDatabase != null)
             throw new Error("This user already exists!");
+
 
         try{
 
@@ -71,52 +70,92 @@ export class UserService{
 
     async updateUser(user: User){
 
-
         if(!user || !user._id) {
             throw new Error("Invalid user object provided!");
         }
 
-        try {
-            await this.userRepository.updateUser(user);
-        } catch(error) {
-            throw new Error("Failed to update user: " + error);
+        const updatedUser = await this.userRepository.updateUser(user);
+        if(!updatedUser) {
+            throw new Error("User not found for update.");
         }
 
+        return updatedUser;
     }
 
     async changePassword(username: string, newPassword: string){
 
-        //@todo handlers for the password parameter
+        if(!username || !username.trim()) {
+            throw new Error("Username is required.");
+        }
 
+        if(!newPassword || newPassword.length < 6) {
+            throw new Error("New password must be at least 6 characters long.");
+        }
 
+        const updatedCredentials = await this.userRepository.updatePasswordByUsername(username, newPassword);
+        if(!updatedCredentials) {
+            throw new Error(`Unable to find user credentials for '${username}'.`);
+        }
+
+        return updatedCredentials;
     }
 
     async changeAuthorization(username: string, newRole: UserRole){
 
-        //@todo handlers for the auth parameter
+        if(!username || !username.trim()) {
+            throw new Error("Username is required.");
+        }
 
+        if(!newRole) {
+            throw new Error("New role is required.");
+        }
 
+        const updatedCredentials = await this.userRepository.updateRoleByUsername(username, newRole);
+        if(!updatedCredentials) {
+            throw new Error(`Unable to find user credentials for '${username}'.`);
+        }
+
+        return updatedCredentials;
     }
 
     async getUserByName(username: string){
 
-        //@todo handlers for the user parameter
+        if(!username || !username.trim()) {
+            throw new Error("Username is required.");
+        }
 
+        const user = await this.userRepository.getUserByUsername(username);
+        if(!user) {
+            throw new Error(`User '${username}' not found.`);
+        }
 
+        return user;
     }
 
     async getAllUsers(){
 
-        //@todo handlers for the users parameter
-
-    
+        const users = await this.userRepository.getAllUsers();
+        return users ?? [];
     }
 
     async deleteUser(user: User){
 
-        //@todo handlers for the user parameter
+        if(!user || !user._id || !user.credentialID) {
+            throw new Error("Invalid user object provided!");
+        }
 
-
+        try {
+            const transactionSession = await mongoose.startSession();
+            await transactionSession.withTransaction(async () => {
+                const deleted = await this.userRepository.deleteUser(user, transactionSession);
+                if(!deleted) {
+                    throw new Error("User not found for deletion.");
+                }
+            });
+            await transactionSession.endSession();
+        } catch(error) {
+            throw new Error("Failed to delete user: " + error);
+        }
     }
     
 

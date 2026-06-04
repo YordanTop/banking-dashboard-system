@@ -1,7 +1,7 @@
 import '../style/input.css'
 import '../style/layout.css'
 
-import { createBrowserRouter, RouterProvider } from 'react-router';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 import HomePage from './pages/HomePage.tsx';
 import RegisterPage from './pages/RegisterPage.tsx'
@@ -14,9 +14,6 @@ import TranslationProvider from './context/provider/TranslationProvider.tsx';
 import BankAccountPage from './pages/BankAccountPage.tsx';
 import TransactionHistoryPage from './pages/TransactionHistoryPage.tsx';
 
-
-
-function App() {
 
   const routers = createBrowserRouter([
 
@@ -60,6 +57,8 @@ function App() {
 
   ])
 
+function App() {
+
   return (
 
     <TranslationProvider>
@@ -67,6 +66,7 @@ function App() {
           <RouterProvider router={routers} />
         </AuthenticationProvider>
     </TranslationProvider>
+
   );
 }
 

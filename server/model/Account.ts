@@ -25,7 +25,7 @@ const accountSchema = new mongoose.Schema<Account>({
         required: true
     },
 
-    iban:{ type: String, required:true},
+    iban:{ type: String, required:true, unique: true },
 
     user_owner_id: {
         type: Schema.Types.ObjectId,

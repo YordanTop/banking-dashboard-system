@@ -8,7 +8,8 @@
         "help": "Помощ",
 
         "registation_button": "Регистрация",
-        "login_button": "Вход"
+        "login_button": "Вход",
+        "logout_button": "Изход"
     },
 
     "nav_personal":{

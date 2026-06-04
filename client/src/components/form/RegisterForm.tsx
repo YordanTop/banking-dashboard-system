@@ -2,6 +2,10 @@ import { useForm, type FieldValues, type SubmitHandler } from 'react-hook-form'
 import { FormField } from '../field/FormField';
 import QuestionIcon from '../../assets/icons/question-icon.svg'
 import { axiosInstance } from '../../config/AxiosConfig';
+import { egnValidationChecker } from './customValidation/register/registerValidation';
+import { useNavigate } from 'react-router';
+import { AuthenticationContext } from '../../context/AuthenticationContext';
+import { useContext } from 'react';
  
 interface RegisterFormInput extends FieldValues{
     egn: string
@@ -18,17 +22,33 @@ interface RegisterFormInput extends FieldValues{
 
 export function RegisterForm(){
 
-    const {register, handleSubmit, formState: {errors}} = useForm<RegisterFormInput>();
+    const {register, handleSubmit, watch, formState: {errors}} = useForm<RegisterFormInput>();
+
+    const navigate = useNavigate();
+    const authentication = useContext(AuthenticationContext);
 
     //Handing the form validation
     const onSubmit: SubmitHandler<RegisterFormInput> = async (data: RegisterFormInput) => {
 
         await axiosInstance.post("auth/register",data)
-                .then(() => alert("Registration was succesful!"))
-                .then(() => console.log(data))
-                .catch((err) => console.error(err));
+                .then(async (result) => {
+                        console.log(result.data);
+                await authentication?.rewriteAuthenticationCache()
+                .catch((error) =>{
+                    console.warn(`Server could not fetch the data! ${error}`);
+                })
+
+                
+                navigate('/login', { replace: true });
+            
+            })
+            .catch((error) => {
+                console.error('Server request failed: ', error);
+            });
 
     }
+
+    const passwordValue = watch("password");
 
     return (<>
 
@@ -49,7 +69,8 @@ export function RegisterForm(){
                 typeOfField="text"
                 register={register}
                 validation={{
-                    required:"Полето е задължително!"
+                    required:"Полето е задължително!",
+                    validate:egnValidationChecker
                 }}
                 error={errors}
             />
@@ -63,6 +84,22 @@ export function RegisterForm(){
                 toggle={{
                     icon: QuestionIcon,
                     message: ""
+                    
+                }}
+                validation={{
+                    minLength:{
+                        value:10,
+                        message:"Полето трябва да има точно 10 числа!"
+                    },
+                    maxLength:{
+                        value:10,
+                        message:"Полето трябва да има точно 10 числа!"
+                    },
+                    pattern: {
+                            value: /^[0-9]+$/,
+                            message: "Моля, въведете само числа!" 
+                        }
+                    
                 }}
                 
             />
@@ -73,7 +110,8 @@ export function RegisterForm(){
                 typeOfField="text"
                 register={register}
                 validation={{
-                    required:"Полето е задължително!"
+                    required:"Полето е задължително!",
+                    
                 }}
                 error={errors}
             />
@@ -81,10 +119,14 @@ export function RegisterForm(){
             
                 fieldName="email"
                 labelText="* Имейл:"
-                typeOfField="email"
+                typeOfField="text"
                 register={register}
                 validation={{
-                    required:"Полето е задължително!"
+                    required:"Полето е задължително!",
+                    pattern:{
+                            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                            message: 'Невалиден имейл адрес!',    
+                    }
                 }}
                 error={errors}
             />
@@ -92,10 +134,15 @@ export function RegisterForm(){
             
                 fieldName="phoneNumber"
                 labelText="* Телефон:"
-                typeOfField="tel"
+                typeOfField="text"
                 register={register}
                 validation={{
-                    required:"Полето е задължително!"
+                    required:"Полето е задължително!",
+                    pattern: {
+                            value: /^08[7-9]\d{7}$/,
+                            message: "Моля, въведете български мобилен телефон който започва с цифрите: 08(7-9)!" 
+                        }
+                    
                 }}
                 error={errors}
             />
@@ -106,7 +153,15 @@ export function RegisterForm(){
                 typeOfField="text"
                 register={register}
                 validation={{
-                    required:"Полето е задължително!"
+                    required:"Полето е задължително!",
+                    minLength: {
+                            value: 6,
+                            message: "Моля, въведете по-детайлен адрес!"
+                        },
+                    pattern: {
+                            value: /^[A-Za-z0-9\s.,\/#\-]+$/,
+                            message: "Моля, въведете адреса само с латински букви!"
+                        }
                 }}
                 error={errors}
             />
@@ -137,7 +192,11 @@ export function RegisterForm(){
                 typeOfField="password"
                 register={register}
                 validation={{
-                    required:"Полето е задължително!"
+                    required:"Полето е задължително!",
+                    pattern: {
+                        value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,24}$/,
+                        message: "Паролата трябва да е между 6 и 24 знака, на латиница и да съдържа поне една буква и една цифра!"
+                    }
                 }}
                 error={errors}
                 toggle={{
@@ -153,7 +212,8 @@ export function RegisterForm(){
                 typeOfField="password"
                 register={register}
                 validation={{
-                    required:"Полето е задължително!"
+                    required:"Полето е задължително!",
+                    validate: (value) => value === passwordValue || "Паролите не съвпадат!"
                 }}
                 error={errors}
             />

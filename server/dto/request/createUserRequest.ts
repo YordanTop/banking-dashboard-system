@@ -1,5 +1,3 @@
-import { UserRole } from "../../model/enums/UserRole"
-
 export interface CreateUserRequest{ 
 
     egn: string

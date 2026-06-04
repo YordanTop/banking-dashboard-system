@@ -1,9 +1,6 @@
 import { Router } from "express";
 
 import { login, logout, register, getCredentials } from "../controller/authController";
-import { authenticationHandler, authorizationHandler } from "../middleware/authHandler";
-import { UserRole } from "../model/enums/UserRole";
-
 
 const authRouter = Router();
 

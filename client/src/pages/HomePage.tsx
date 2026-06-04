@@ -1,5 +1,11 @@
 import '../../style/input.css'
 import '../../style/layout.css'
+import logo from '../assets/fibank-logo.png'
+import android from '../assets/android.png'
+
+import informaiton from '../assets/informaiton.png'
+import monitor from '../assets/monitor.png'
+import notes from '../assets/notes.png'
 import MainFooter from '../components/MainFooter.tsx' 
 import FibankTitle from '../assets/fibank-title.png' 
 import FibankPlace from '../assets/fibank-place.jpg'
@@ -10,18 +16,52 @@ import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next'
 import { RedirectNonLoggedInUser } from '../utilities/RedirectNonLoggedInUser.tsx'
 import TopNavigationBar from '../components/bar/NavigationBar.tsx'
+import type NavigationOption from '../components/bar/NavigationOption.tsx'
 
 function HomePage() {
 
     RedirectNonLoggedInUser("/statistic");
-    
+    const [t] = useTranslation();
 
-
-    const { t } = useTranslation();
+    const NavbarConfig: NavigationOption = {
+        logo: {
+            iconSource: logo,
+            rediraction: "" 
+        },
+        links: [
+            {
+                text: t("nav_basic.home"),
+                rediraction: "",
+                iconSource: monitor 
+            },
+            {
+                text: t("nav_basic.mobile_version"),
+                rediraction: "",
+                iconSource: android, 
+            },
+            {
+                text: t("nav_basic.basic_services"),
+                rediraction: "",
+                iconSource: notes
+            },
+            {
+                text: t("nav_basic.help"),
+                rediraction: "",
+                iconSource: informaiton
+            }
+        ],
+        buttons: [
+            {
+                text: t("nav_basic.registation_button"),
+                rediraction: "register",
+                iconSource: "" 
+            }
+        ]
+    };
 
     return (<>
 
-      <TopNavigationBar />
+      <TopNavigationBar barConfiguration={NavbarConfig} />
 
         <main className='flex flex-col min-h-screen  md:grid grid-cols-2 grid-row-2 grid-rows-[400px_1fr] gap-6 p-5'>
             <section className='flex flex-col justify-center relative overflow-hidden items-center p-10 bg-white/75 rounded-xl md:col-span-2 w-full'>
